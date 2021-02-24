@@ -19,6 +19,21 @@ func Hello(name string) (string, error) {
 	return message, nil
 }
 
+// map[string]stringはstring => stringの連想配列？
+func Hellos(names []string) (map[string]string, error) {
+	messages := make(map[string]string)
+	// for ~ range ~ で繰り返し
+	// forの変数は_で省略可能
+	for _, name := range names {
+		message, err := Hello(name)
+		if err != nil {
+			return nil, err
+		}
+		messages[name] = message
+	}
+	return messages, nil
+}
+
 // package内の変数の初期化が終わったら呼ばれる？
 func init() {
 	rand.Seed(time.Now().UnixNano())
