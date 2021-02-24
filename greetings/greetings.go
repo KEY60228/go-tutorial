@@ -16,6 +16,10 @@ func Hello(name string) (string, error) {
 
 	// ':=' は変数宣言と同時に代入する記法
 	message := fmt.Sprintf(randomFormat(), name)
+
+	// テスト失敗用
+	// message := fmt.Sprintf(randomFormat())
+
 	return message, nil
 }
 
