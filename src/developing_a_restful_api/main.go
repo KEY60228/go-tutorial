@@ -25,6 +25,7 @@ func main() {
 	// https://pkg.go.dev/github.com/gin-gonic/gin#RouterGroup.GET
 	// ルート定義
 	router.GET("/albums", getAlbums)
+	router.POST("/albums", postAlbums)
 
 	// https://pkg.go.dev/github.com/gin-gonic/gin#Engine.Run
 	// http.Server起動
@@ -36,4 +37,18 @@ func getAlbums(c *gin.Context) {
 	// 第一引数でステータスコード指定、第二引数でJSON化するデータを渡す
 	// Content-Type: application/jsonのレスポンスを返す？
 	c.IndentedJSON(http.StatusOK, albums)
+}
+
+func postAlbums(c *gin.Context) {
+	var newAlbum album
+
+	// https://pkg.go.dev/github.com/gin-gonic/gin#Context.BindJSON
+	// リクエストボディで受け取ったJSONデータをnewAlbumにバインド？
+	err := c.BindJSON(&newAlbum);
+	if err != nil {
+		return
+	}
+
+	albums = append(albums, newAlbum)
+	c.IndentedJSON(http.StatusCreated, newAlbum)
 }
