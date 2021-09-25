@@ -25,6 +25,7 @@ func main() {
 	// https://pkg.go.dev/github.com/gin-gonic/gin#RouterGroup.GET
 	// ルート定義
 	router.GET("/albums", getAlbums)
+	router.GET("/albums/:id", getAlbumByID)
 	router.POST("/albums", postAlbums)
 
 	// https://pkg.go.dev/github.com/gin-gonic/gin#Engine.Run
@@ -51,4 +52,20 @@ func postAlbums(c *gin.Context) {
 
 	albums = append(albums, newAlbum)
 	c.IndentedJSON(http.StatusCreated, newAlbum)
+}
+
+func getAlbumByID(c *gin.Context) {
+	// https://pkg.go.dev/github.com/gin-gonic/gin#Context.Param
+	// URLパラメータを代入
+	id := c.Param("id")
+
+	for _, a := range albums {
+		if a.ID == id {
+			c.IndentedJSON(http.StatusOK, a)
+			return
+		}
+	}
+	// gin.H: https://pkg.go.dev/github.com/gin-gonic/gin#H
+	// map[string]interface{}のショートカット
+	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "album not found"})
 }
