@@ -12,6 +12,10 @@ type Page struct {
 	Body	[]byte
 }
 
+// *Template互換のある値以外の場合はpanic
+// これを実装することで毎回ParseFilesが呼ばれることを避ける
+var templates = template.Must(template.ParseFiles("edit.html", "view.html"))
+
 func main() {
 	// ルーティング的な
 	http.HandleFunc("/view/", viewHandler)
@@ -58,15 +62,8 @@ func editHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
-	// ---.htmlを読んで*template.Templateを返す
-	t, err := template.ParseFiles(tmpl + ".html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	// HTMLを生成してhttp.ResponseWriter(w)に書き込む
-	// HTML内の.---はpが補完
-	err = t.Execute(w, p)
+	// templatesで読んだhtmlファイルの呼び出し
+	err := templates.ExecuteTemplate(w, tmpl + ".html", p)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
