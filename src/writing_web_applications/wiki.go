@@ -59,16 +59,27 @@ func editHandler(w http.ResponseWriter, r *http.Request) {
 
 func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
 	// ---.htmlを読んで*template.Templateを返す
-	t, _ := template.ParseFiles(tmpl + ".html")
+	t, err := template.ParseFiles(tmpl + ".html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	// HTMLを生成してhttp.ResponseWriter(w)に書き込む
 	// HTML内の.---はpが補完
-	t.Execute(w, p)
+	err = t.Execute(w, p)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
 func saveHandler(w http.ResponseWriter, r *http.Request) {
 	title := r.URL.Path[len("/save/"):]
 	body := r.FormValue("body")
 	p := &Page{Title: title, Body: []byte(body)}
-	p.save()
+	err := p.save()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	http.Redirect(w, r, "/view/" + title, http.StatusFound)
 }
