@@ -4,5 +4,7 @@ services:
     image: 'golang:1.17-alpine3.14'
     volumes:
       - ./src:/golang
+    ports:
+      - "8080:8080"
     working_dir: /golang
     tty: true
