@@ -14,9 +14,10 @@ type Page struct {
 	Body	[]byte
 }
 
-// *Template互換のある値以外の場合はpanic
+// https://pkg.go.dev/html/template#ParseFiles
 // これを実装することで毎回ParseFilesが呼ばれることを避ける
-var templates = template.Must(template.ParseFiles("edit.html", "view.html"))
+// ディレクトリは考慮せず、ファイル名でTemplateが作成される
+var templates = template.Must(template.ParseFiles("tmpl/edit.html", "tmpl/view.html"))
 // 正規表現を定義し、regexp.Regexpを返す
 var validPath = regexp.MustCompile("^/(edit|save|view)/([a-zA-Z0-9]+)$")
 
@@ -31,13 +32,13 @@ func main() {
 }
 
 func (p *Page) save() error {
-	filename := p.Title + ".txt"
+	filename := "data/" + p.Title + ".txt"
 	// ファイルの書き出し (永続化)
 	return ioutil.WriteFile(filename, p.Body, 0600)
 }
 
 func loadPage(title string) (*Page, error) {
-	filename := title + ".txt"
+	filename := "data/" + title + ".txt"
 	// ファイルの読み込み
 	body, err := ioutil.ReadFile(filename)
 	if err != nil {
