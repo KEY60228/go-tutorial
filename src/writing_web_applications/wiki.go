@@ -26,6 +26,12 @@ func main() {
 	http.HandleFunc("/view/", makeHandler(viewHandler))
 	http.HandleFunc("/edit/", makeHandler(editHandler))
 	http.HandleFunc("/save/", makeHandler(saveHandler))
+	// closure
+	// http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	// 	http.Redirect(w, r, "/view/FrontPage", http.StatusFound)
+	// })
+	// handler
+	http.HandleFunc("/", topHandler)
 	// サーバー起動？
 	// 予期せぬエラー時にlog吐く
 	log.Fatal(http.ListenAndServe(":8080", nil))
@@ -68,6 +74,10 @@ func saveHandler(w http.ResponseWriter, r *http.Request, title string) {
 		return
 	}
 	http.Redirect(w, r, "/view/" + title, http.StatusFound)
+}
+
+func topHandler(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, "/view/FrontPage", http.StatusFound)
 }
 
 func (p *Page) save() error {
