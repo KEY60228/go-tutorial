@@ -26,11 +26,7 @@ func main() {
 	http.HandleFunc("/view/", makeHandler(viewHandler))
 	http.HandleFunc("/edit/", makeHandler(editHandler))
 	http.HandleFunc("/save/", makeHandler(saveHandler))
-	// closure
-	// http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-	// 	http.Redirect(w, r, "/view/FrontPage", http.StatusFound)
-	// })
-	// handler
+	http.Handle("/statics/", http.StripPrefix("/statics/", http.FileServer(http.Dir("statics/"))))
 	http.HandleFunc("/", topHandler)
 	// サーバー起動？
 	// 予期せぬエラー時にlog吐く
