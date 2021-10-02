@@ -12,26 +12,26 @@ import (
 var db *sql.DB
 
 type Album struct {
-	ID int64
-	Title string
+	ID     int64
+	Title  string
 	Artist string
-	Price float32
+	Price  float32
 }
 
 func main() {
 	// DB接続
 	cfg := mysql.Config{
-		User: os.Getenv("DBUSER"),
+		User:   os.Getenv("DBUSER"),
 		Passwd: os.Getenv("DBPASS"),
-		Net: "tcp",
-		Addr: "mysql",
+		Net:    "tcp",
+		Addr:   "mysql",
 		DBName: "recordings",
 	}
 
 	// DB handler
 	var err error
 	db, err = sql.Open("mysql", cfg.FormatDSN())
-	if err !=  nil {
+	if err != nil {
 		log.Fatal(err)
 	}
 
@@ -55,9 +55,9 @@ func main() {
 	fmt.Printf("Album found: %v\n", alb)
 
 	albID, err := addAlbum(Album{
-		Title: "The Modern Sound of Betty Carter",
+		Title:  "The Modern Sound of Betty Carter",
 		Artist: "Betty Carter",
-		Price: 49.99,
+		Price:  49.99,
 	})
 	if err != nil {
 		log.Fatal(err)
@@ -76,7 +76,7 @@ func albumsByArtist(name string) ([]Album, error) {
 
 	for rows.Next() {
 		var alb Album
-		if err := rows.Scan(&alb.ID,  &alb.Title, &alb.Artist, &alb.Price); err != nil {
+		if err := rows.Scan(&alb.ID, &alb.Title, &alb.Artist, &alb.Price); err != nil {
 			return nil, fmt.Errorf("albumsByArtist %q: %v", name, err)
 		}
 		albums = append(albums, alb)
