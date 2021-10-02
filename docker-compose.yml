@@ -8,3 +8,9 @@ services:
       - "8080:8080"
     working_dir: /golang
     tty: true
+  mysql:
+    image: mysql:8.0
+    env_file: 
+      - .env
+    volumes:
+      - ./mysql/data/:/docker-entrypoint-initdb.d
